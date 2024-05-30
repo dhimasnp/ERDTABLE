@@ -1,0 +1,295 @@
+BEGIN;
+
+
+CREATE TABLE IF NOT EXISTS public."Publisher"
+(
+    "PublisherName" character varying(100) NOT NULL,
+    "City" character varying(50) NOT NULL,
+    "Country" character varying(50) NOT NULL,
+    "Telephone" character varying(15) NOT NULL,
+    "YearFounded" integer NOT NULL,
+    "Email" character varying(100) NOT NULL,
+    PRIMARY KEY ("PublisherName")
+);
+
+CREATE TABLE IF NOT EXISTS public."Book"
+(
+    "BookID" integer NOT NULL,
+    "BookName" character varying(255) NOT NULL,
+    "PublicationYear" integer NOT NULL,
+    "Pages" integer NOT NULL,
+    "PublisherName" character varying(100) NOT NULL,
+    PRIMARY KEY ("BookID")
+);
+
+CREATE TABLE IF NOT EXISTS public."Author"
+(
+    "AuthorID" integer NOT NULL,
+    "AuthorName" character varying(100) NOT NULL,
+    "Email" character varying(100) NOT NULL,
+    "Phone" character varying(15) NOT NULL,
+    PRIMARY KEY ("AuthorID")
+);
+
+CREATE TABLE IF NOT EXISTS public."Customer"
+(
+    "CustomerID" integer NOT NULL,
+    "CustomerName" character varying(100) NOT NULL,
+    "Address" character varying(255) NOT NULL,
+    "City" character varying(100) NOT NULL,
+    "Province" character varying(100) NOT NULL,
+    "Country" character varying(100) NOT NULL,
+    PRIMARY KEY ("CustomerID")
+);
+
+CREATE TABLE IF NOT EXISTS public."AuthorBook (Junction)"
+(
+    "BookAuthorID" integer NOT NULL,
+    "BookID" integer NOT NULL,
+    "AuthorID" integer NOT NULL,
+    PRIMARY KEY ("BookAuthorID")
+);
+
+CREATE TABLE IF NOT EXISTS public."CustomerBook (Junction)"
+(
+    "BookCustomerID" integer NOT NULL,
+    "Date" date NOT NULL,
+    "Price" integer NOT NULL,
+    "Quantity" integer NOT NULL,
+    "BookID" integer NOT NULL,
+    "CustomerID" integer NOT NULL,
+    PRIMARY KEY ("BookCustomerID")
+);
+
+CREATE TABLE IF NOT EXISTS public."Genre"
+(
+    "GenreType" character varying(100) NOT NULL,
+    "BookID" integer NOT NULL,
+    PRIMARY KEY ("GenreType")
+);
+
+CREATE TABLE IF NOT EXISTS public."Ratings"
+(
+    "RatingID" integer NOT NULL,
+    "Rating" integer NOT NULL,
+    "ReviewDate" date NOT NULL,
+    "BookID" integer NOT NULL,
+    "CustomerID" integer NOT NULL,
+    PRIMARY KEY ("RatingID")
+);
+
+CREATE TABLE IF NOT EXISTS public."BookGenre"
+(
+    "GenreType" character varying(100) NOT NULL,
+    "BookID" integer NOT NULL,
+    PRIMARY KEY ("GenreType", "BookID")
+);
+
+CREATE TABLE IF NOT EXISTS public."Category"
+(
+    "CategoryName" character varying(100) NOT NULL,
+    "BookID" integer NOT NULL,
+    PRIMARY KEY ("CategoryName")
+);
+
+CREATE TABLE IF NOT EXISTS public."Wishlist"
+(
+    "WishlistID" integer NOT NULL,
+    "DateAdded" date NOT NULL,
+    "BookID" integer NOT NULL,
+    PRIMARY KEY ("WishlistID")
+);
+
+CREATE TABLE IF NOT EXISTS public."User"
+(
+    "UserID" integer NOT NULL,
+    "Email" character varying NOT NULL,
+    "Username" character varying NOT NULL,
+    "Password" character varying NOT NULL,
+    "CustomerID" integer NOT NULL,
+    PRIMARY KEY ("UserID")
+);
+
+CREATE TABLE IF NOT EXISTS public."Review"
+(
+    "ReviewID" integer NOT NULL,
+    "BookID" integer NOT NULL,
+    "CustomerID" integer NOT NULL,
+    "TextReview" text,
+    PRIMARY KEY ("ReviewID")
+);
+
+CREATE TABLE IF NOT EXISTS public."ShoppingCart (Junction)"
+(
+    "BookID" integer NOT NULL,
+    "WishlistID" integer NOT NULL,
+    PRIMARY KEY ("BookID", "WishlistID")
+);
+
+CREATE TABLE IF NOT EXISTS public."InventoryBook"
+(
+    "InventoryID" integer NOT NULL,
+    "Quantity" integer NOT NULL,
+    "LatestRestockDate" date NOT NULL,
+    "BookID" integer NOT NULL,
+    PRIMARY KEY ("InventoryID")
+);
+
+CREATE TABLE IF NOT EXISTS public."UserWhislist (Junction)"
+(
+    "UserID" integer NOT NULL,
+    "WishlistID" integer NOT NULL
+);
+
+ALTER TABLE IF EXISTS public."Book"
+    ADD CONSTRAINT "PublisherName" FOREIGN KEY ("PublisherName")
+    REFERENCES public."Publisher" ("PublisherName") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."AuthorBook (Junction)"
+    ADD CONSTRAINT "BookID" FOREIGN KEY ("BookID")
+    REFERENCES public."Book" ("BookID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."AuthorBook (Junction)"
+    ADD CONSTRAINT "AuthorID" FOREIGN KEY ("AuthorID")
+    REFERENCES public."Author" ("AuthorID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."CustomerBook (Junction)"
+    ADD CONSTRAINT "BookID" FOREIGN KEY ("BookID")
+    REFERENCES public."Book" ("BookID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."CustomerBook (Junction)"
+    ADD CONSTRAINT "CustomerID" FOREIGN KEY ("CustomerID")
+    REFERENCES public."Customer" ("CustomerID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."Genre"
+    ADD CONSTRAINT "BookID" FOREIGN KEY ("BookID")
+    REFERENCES public."Book" ("BookID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."Ratings"
+    ADD CONSTRAINT "BookID" FOREIGN KEY ("BookID")
+    REFERENCES public."Book" ("BookID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."Ratings"
+    ADD CONSTRAINT "CustomerID" FOREIGN KEY ("CustomerID")
+    REFERENCES public."Customer" ("CustomerID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."BookGenre"
+    ADD CONSTRAINT "BookID" FOREIGN KEY ("BookID")
+    REFERENCES public."Book" ("BookID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."Category"
+    ADD CONSTRAINT "BookID" FOREIGN KEY ("BookID")
+    REFERENCES public."Book" ("BookID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."Wishlist"
+    ADD CONSTRAINT "BookID" FOREIGN KEY ("BookID")
+    REFERENCES public."Book" ("BookID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."User"
+    ADD CONSTRAINT "CustomerID" FOREIGN KEY ("CustomerID")
+    REFERENCES public."Customer" ("CustomerID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."Review"
+    ADD CONSTRAINT "BookID" FOREIGN KEY ("BookID")
+    REFERENCES public."Book" ("BookID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."Review"
+    ADD CONSTRAINT "CustomerID" FOREIGN KEY ("CustomerID")
+    REFERENCES public."Customer" ("CustomerID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."ShoppingCart (Junction)"
+    ADD CONSTRAINT "BookID" FOREIGN KEY ("BookID")
+    REFERENCES public."Book" ("BookID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."ShoppingCart (Junction)"
+    ADD CONSTRAINT "WishlistID" FOREIGN KEY ("WishlistID")
+    REFERENCES public."Wishlist" ("WishlistID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."InventoryBook"
+    ADD CONSTRAINT "BookID" FOREIGN KEY ("BookID")
+    REFERENCES public."Book" ("BookID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."UserWhislist (Junction)"
+    ADD CONSTRAINT "WishilistID" FOREIGN KEY ("WishlistID")
+    REFERENCES public."Wishlist" ("WishlistID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."UserWhislist (Junction)"
+    ADD CONSTRAINT "UserID" FOREIGN KEY ("UserID")
+    REFERENCES public."User" ("UserID") MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+END;
