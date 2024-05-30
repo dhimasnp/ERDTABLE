@@ -1,0 +1,4 @@
+CREATE VIEW Genre_terpilih AS
+SELECT "GenreType"
+FROM public."Genre"
+WHERE "BookID" = 8 OR "BookID" = 9;
