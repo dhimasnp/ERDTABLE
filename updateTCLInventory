@@ -1,0 +1,11 @@
+UPDATE public."InventoryBook"
+SET "Quantity" = 50, "LatestRestockDate" = '2024-01-10'
+WHERE "InventoryID" = 1;
+
+UPDATE public."InventoryBook"
+SET "Quantity" = 75, "LatestRestockDate" = '2024-01-15'
+WHERE "InventoryID" = 2;
+
+UPDATE public."InventoryBook"
+SET "Quantity" = 100, "LatestRestockDate" = '2024-01-20'
+WHERE "InventoryID" = 3;
